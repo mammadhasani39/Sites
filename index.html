@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Sites (:</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+
     body {
       font-family: 'Vazirmatn', sans-serif;
       background: #121212;
@@ -14,9 +16,11 @@
       flex-direction: column;
       align-items: center;
     }
+
     h1 {
       color: #64b5f6;
     }
+
     .button-link {
       text-decoration: none;
       display: block;
@@ -33,21 +37,85 @@
       font-size: 18px;
       transition: background 0.3s, color 0.3s;
     }
+
     .button-link:hover {
       background: #3a3a3a;
       color: #90caf9;
     }
+
+    #loader {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #0d0d0d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: opacity 3s ease, visibility 2s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .ring {
+      width: 70px;
+      height: 70px;
+      border: 8px solid #555;
+      border-top: 8px solid #00e5ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px #00e5ff;
+    }
+
+    .text {
+      color: #00e5ff;
+      font-size: 18px;
+      font-weight: bold;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
-  <h1>به سایتم خوش اومدی (:</h1>
 
-  <a href="https://mammadhasani39.github.io/SocialMedia" target="_blank" class="button-link">راه های ارتباطی</a>
-  <a href="https://mammadhasani39.github.io/SnakeGame" target="_blank" class="button-link">مار نوکیا</a>
-  <a href="https://mammadhasani39.github.io/SnakeGamePC" target="_blank" class="button-link">مار نوکیا (کامپیوتر)</a>
-    <a href="https://mammadhasani39.github.io/Zemoji" target="_blank" class="button-link">زموجی (ایموجی زنجیره ای)</a>
-  <a href="https://mammadhasani39.github.io/ChatGPT" target="_blank" class="button-link">هوش مصنوعی</a>
-  <a href="https://mammadhasani39.github.io/Tala" target="_blank" class="button-link">قیمت طلا</a>
+<div id="loader">
+  <div class="ring"></div>
+  <div class="text">در حال بارگزاری...</div>
+</div>
+
+<h1>به سایتم خوش اومدی (:</h1>
+
+<a href="https://mammadhasani39.github.io/SocialMedia" target="_blank" class="button-link">راه های ارتباطی</a>
+<a href="https://mammadhasani39.github.io/SnakeGame" target="_blank" class="button-link">مار نوکیا</a>
+<a href="https://mammadhasani39.github.io/SnakeGamePC" target="_blank" class="button-link">مار نوکیا (کامپیوتر)</a>
+<a href="https://mammadhasani39.github.io/Zemoji" target="_blank" class="button-link">زموجی (ایموجی زنجیره ای)</a>
+<a href="https://mammadhasani39.github.io/ChatGPT" target="_blank" class="button-link">هوش مصنوعی</a>
+<a href="https://mammadhasani39.github.io/Tala" target="_blank" class="button-link">قیمت طلا</a>
+
+<script>
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
+    setTimeout(() => {
+      loader.classList.add("hidden");
+    }, 1000);
+  });
+</script>
 
 </body>
 </html>
