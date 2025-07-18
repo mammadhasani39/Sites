@@ -7,40 +7,69 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
 
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: 'Vazirmatn', sans-serif;
-      background: #121212;
+      background: black;
       color: #e0e0e0;
-      padding: 30px;
+    }
+
+    canvas#matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #0d0d0d, #000000);
+      z-index: 0;
+      display: block;
+      pointer-events: none;
+    }
+
+    body {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 30px 15px;
+      padding-bottom: 100px;
+      min-height: 100vh;
     }
 
     h1 {
-      color: #64b5f6;
+      color: #0f0;
+      margin-bottom: 20px;
+      white-space: nowrap;
+      z-index: 2;
+      position: relative;
     }
 
     .button-link {
       text-decoration: none;
       display: block;
-      background: #2a2a2a;
+      background: rgba(0, 255, 0, 0.2);
       margin: 10px 0;
       padding: 15px 25px;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
       width: 90%;
       max-width: 400px;
       text-align: center;
-      color: #ffffff;
+      color: #0f0;
       font-weight: bold;
       font-size: 18px;
+      border: 1px solid rgba(0, 255, 0, 0.4);
       transition: background 0.3s, color 0.3s;
+      position: relative;
+      z-index: 2;
     }
 
     .button-link:hover {
-      background: #3a3a3a;
-      color: #90caf9;
+      background: rgba(0, 255, 0, 0.35);
+      color: #b9fbc0;
     }
 
     #loader {
@@ -67,15 +96,15 @@
       width: 70px;
       height: 70px;
       border: 8px solid #555;
-      border-top: 8px solid #00e5ff;
+      border-top: 8px solid #00ff00;
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-bottom: 20px;
-      box-shadow: 0 0 15px #00e5ff;
+      box-shadow: 0 0 15px #00ff00;
     }
 
     .text {
-      color: #00e5ff;
+      color: #00ff00;
       font-size: 18px;
       font-weight: bold;
       animation: pulse 1.2s infinite;
@@ -94,30 +123,70 @@
 </head>
 <body>
 
-<div id="loader">
-  <div class="ring"></div>
-  <div class="text">در حال بارگزاری...</div>
-</div>
+  <canvas id="matrix"></canvas>
 
-<h1>به سایتم خوش اومدی (:</h1>
+  <div id="loader">
+    <div class="ring"></div>
+    <div class="text">در حال بارگزاری...</div>
+  </div>
 
-<a href="https://mammadhasani39.github.io/SocialMedia" target="_blank" class="button-link">راه های ارتباطی</a>
-<a href="https://mammadhasani39.github.io/SnakeGame" target="_blank" class="button-link">مار نوکیا</a>
-<a href="https://mammadhasani39.github.io/SnakeGamePC" target="_blank" class="button-link">مار نوکیا (کامپیوتر)</a>
-<a href="https://mammadhasani39.github.io/Zemoji" target="_blank" class="button-link">زموجی (ایموجی زنجیره ای)</a>
-<a href="https://mammadhasani39.github.io/ChatGPT" target="_blank" class="button-link">هوش مصنوعی</a>
-<a href="https://mammadhasani39.github.io/WorldHour" target="_blank" class="button-link">ساعت جهانی</a>
-<a href="https://mammadhasani39.github.io/Stopwatch" target="_blank" class="button-link">تایمر</a>
-<a href="https://mammadhasani39.github.io/GuessNumber" target="_blank" class="button-link">حدس عدد</a>
+  <h1>به سایتم خوش اومدی (:</h1>
 
-<script>
-  window.addEventListener("load", () => {
-    const loader = document.getElementById("loader");
-    setTimeout(() => {
-      loader.classList.add("hidden");
-    }, 1000);
-  });
-</script>
+  <a href="https://mammadhasani39.github.io/SocialMedia" target="_blank" class="button-link">راه های ارتباطی</a>
+  <a href="https://mammadhasani39.github.io/SnakeGame" target="_blank" class="button-link">مار نوکیا</a>
+  <a href="https://mammadhasani39.github.io/SnakeGamePC" target="_blank" class="button-link">مار نوکیا (کامپیوتر)</a>
+  <a href="https://mammadhasani39.github.io/Zemoji" target="_blank" class="button-link">زموجی (ایموجی زنجیره ای)</a>
+  <a href="https://mammadhasani39.github.io/ChatGPT" target="_blank" class="button-link">هوش مصنوعی</a>
+  <a href="https://mammadhasani39.github.io/WorldHour" target="_blank" class="button-link">ساعت جهانی</a>
+  <a href="https://mammadhasani39.github.io/Stopwatch" target="_blank" class="button-link">تایمر</a>
+  <a href="https://mammadhasani39.github.io/GuessNumber" target="_blank" class="button-link">حدس عدد</a>
+
+  <script>
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    let fontSize = 14;
+    let letters = "01";
+    let columns;
+    let drops;
+
+    function setupCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = Math.ceil(canvas.width / fontSize);
+      drops = Array(columns).fill().map(() => Math.floor(Math.random() * (canvas.height / fontSize)));
+    }
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0f0";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    setupCanvas();
+    setInterval(draw, 35);
+    window.addEventListener("resize", setupCanvas);
+
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("loader");
+      setTimeout(() => {
+        loader.classList.add("hidden");
+      }, 1000);
+    });
+  </script>
 
 </body>
 </html>
